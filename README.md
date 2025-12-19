@@ -235,7 +235,7 @@ This project is licensed under the [MIT License](LICENSE) - see the [LICENSE](LI
 ## 📞 Support & Contact
 
 -   🐛 Issues: [GitHub Issues](https://github.com/edidevv/aether-vpn-manager/issues)
--   📧 Contact the author: [TODO: Add contact email, e.g., contact@edidevv.com]
+-   📧 Contact the author: bt4c@fmf25f.lol
 
 ---
 
