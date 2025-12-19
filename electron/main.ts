@@ -5,11 +5,14 @@ import fs from 'node:fs'
 import { createRequire } from 'node:module'
 import { fileURLToPath } from 'node:url'
 
-// Flags pentru performanta grafica si prevenire freeze
-app.commandLine.appendSwitch('disable-background-timer-throttling');
-app.commandLine.appendSwitch('disable-renderer-backgrounding');
+// --- GPU ACTIVAT + FIX-URI PENTRU LINUX ---
+// Nu dezactivam accelerarea hardware! O lasam pornita pentru animatii.
+// Folosim aceste flag-uri pentru a preveni ecranul negru/alb.
 app.commandLine.appendSwitch('ignore-gpu-blocklist');
-app.disableHardwareAcceleration();
+app.commandLine.appendSwitch('enable-gpu-rasterization');
+app.commandLine.appendSwitch('enable-zero-copy');
+app.commandLine.appendSwitch('disable-gpu-sandbox'); // CRITIC PENTRU LINUX + ELECTRON
+// app.disableHardwareAcceleration(); // <--- SCOASA PENTRU PERFORMANTA
 
 const require = createRequire(import.meta.url)
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
@@ -27,9 +30,9 @@ let lastTx = 0
 
 function createWindow() {
   win = new BrowserWindow({
-    width: 1000,
-    height: 700,
-    minWidth: 800,
+    width: 1100,
+    height: 750,
+    minWidth: 900,
     minHeight: 600,
     frame: false,
     transparent: true,
@@ -40,7 +43,7 @@ function createWindow() {
       nodeIntegration: false,
       contextIsolation: true,
       webSecurity: false,
-      backgroundThrottling: false // CRITIC: Graficul merge si cand nu esti pe app
+      backgroundThrottling: false // Animatiile merg si in background
     },
   })
 
@@ -118,26 +121,32 @@ const startTrafficMonitor = () => {
         const down = Math.max(0, current.rx - lastRx);
         const up = Math.max(0, current.tx - lastTx);
         lastRx = current.rx; lastTx = current.tx;
-        // Trimitem update chiar daca e 0, ca sa "curga" graficul
         win?.webContents.send('stats:update', { down, up });
     }, 1000);
 }
 
 const stopTrafficMonitor = () => {
     if (trafficInterval) clearInterval(trafficInterval);
-    // Resetam graficul vizual la 0
     win?.webContents.send('stats:update', { down: 0, up: 0 });
 }
 
 ipcMain.handle('vpn:mullvad-check', async () => {
     try {
         const controller = new AbortController();
-        const id = setTimeout(() => controller.abort(), 2000);
+        const id = setTimeout(() => controller.abort(), 3000);
         const req = await fetch('https://am.i.mullvad.net/json', { signal: controller.signal });
         clearTimeout(id);
         const data = await req.json();
         return { connected: data.mullvad_exit_ip, ip: data.ip, country: data.country };
     } catch { return { connected: false }; }
+});
+
+ipcMain.handle('vpn:leak-check', async () => {
+    try {
+        const req = await fetch('https://am.i.mullvad.net/json');
+        const data = await req.json();
+        return { success: true, ...data, isProtected: data.mullvad_exit_ip };
+    } catch { return { success: false }; }
 });
 
 ipcMain.handle('vpn:scan-dir', async (_, dirPath) => {
@@ -149,6 +158,32 @@ ipcMain.handle('vpn:scan-dir', async (_, dirPath) => {
             return { id: f, name: f.replace(/\.(conf|ovpn)$/, ''), path: path.join(dirPath, f), type: f.includes('conf') ? 'wireguard' : 'openvpn', endpoint: m ? m[3] : '1.1.1.1' };
         });
     } catch { return []; }
+});
+
+ipcMain.handle('sys:get-processes', async () => {
+    try {
+        const ssOut = await execute('ss -tuap state established');
+        const lines = ssOut.split('\n');
+        const processes = [];
+        for (let i = 1; i < lines.length; i++) {
+            const line = lines[i].trim();
+            if (!line) continue;
+            const parts = line.split(/\s+/);
+            if (parts.length < 6) continue;
+            const procRaw = parts.slice(6).join(' ');
+            const procMatch = procRaw.match(/"([^"]+)",pid=([0-9]+)/);
+            if (procMatch) {
+                const localIP = parts[4];
+                let status = 'safe';
+                if (!localIP.startsWith('10.') && !localIP.startsWith('192.168.') && !localIP.startsWith('127.')) {
+                    // Daca nu e IP privat, e suspect daca VPN e oprit
+                    status = currentConnectionName ? 'safe' : 'danger';
+                }
+                processes.push({ id: procMatch[2], name: procMatch[1], pid: procMatch[2], protocol: parts[0].toUpperCase(), status, local: parts[4], remote: parts[5] });
+            }
+        }
+        return { processes: processes.slice(0, 50), vpnIp: '10.64.x.x' }; // Limita pt performanta
+    } catch { return { processes: [] }; }
 });
 
 ipcMain.handle('vpn:connect', async (_, config) => {
@@ -174,6 +209,10 @@ ipcMain.handle('vpn:disconnect', async () => {
     }
     win?.webContents.send('vpn:status', { connected: false });
     return { success: true };
+});
+
+ipcMain.handle('vpn:ping', async (_, ip) => {
+    try { const o = await execute(`ping -c 1 -W 1 ${ip}`); const m = o.match(/time=([0-9.]+)/); return m ? Math.round(parseFloat(m[1])) : 999; } catch { return 999; }
 });
 
 ipcMain.handle('app:close', () => app.quit());

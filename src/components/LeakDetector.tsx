@@ -60,7 +60,6 @@ export const LeakDetector = () => {
                             <ScanLine className="w-12 h-12 text-emerald-400 mb-3 group-hover:scale-110 transition-transform" />
                             <span className="text-xs font-bold tracking-[0.2em] text-gray-400 group-hover:text-white">START AUDIT</span>
                         </div>
-                        <p className="mt-6 text-gray-500 text-sm">Deep Packet Inspection via Mullvad API</p>
                     </motion.div>
                 )}
 
@@ -83,7 +82,7 @@ export const LeakDetector = () => {
                                     {ipData.isProtected ? "SECURE CONNECTION" : "IDENTITY EXPOSED"}
                                 </h3>
                                 <p className="text-xs text-gray-400">
-                                    {ipData.isProtected ? "Traffic routed through Mullvad Network." : "Your real IP is visible."}
+                                    {ipData.isProtected ? "" : "Your real IP is visible."}
                                 </p>
                             </div>
                         </div>
