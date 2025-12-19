@@ -74,7 +74,7 @@ export const SettingsView = ({ settings, setSettings, appVersion, configDir }: a
                          </div>
                          <div className="flex justify-between items-center text-xs">
                              <span className="text-gray-500">Backend Engine</span>
-                             <span className="text-emerald-400 font-mono">NMCLI + Electron</span>
+                             <span className="text-white font-mono">Electron + Nmcli</span>
                          </div>
                          <div className="flex justify-between items-center text-xs">
                              <span className="text-gray-500">App Version</span>
