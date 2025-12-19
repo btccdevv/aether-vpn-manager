@@ -97,7 +97,7 @@ function App() {
     <div className="h-screen w-screen bg-[#09090b] text-white overflow-hidden flex flex-col relative font-sans">
       <div className="absolute inset-0 z-0"><ParticleBackground /></div>
       <div className="h-10 flex justify-between items-center px-4 z-50 bg-black/20 backdrop-blur-md border-b border-white/5" style={{WebkitAppRegion: 'drag'} as any}>
-         <span className="text-xs font-bold text-gray-500 tracking-[0.2em]">AETHER PRO</span>
+         <span className="text-xs font-bold text-gray-500 tracking-[0.2em]">Aether VPN Manager</span>
          <div className="flex items-center gap-2 no-drag" style={{WebkitAppRegion: 'no-drag'} as any}><button onClick={()=>window.ipcRenderer.invoke('app:minimize')} className="p-1 hover:bg-white/10 rounded"><Minus className="w-4 h-4"/></button><button onClick={()=>window.ipcRenderer.invoke('app:close')} className="p-1 hover:bg-red-500/80 rounded"><X className="w-4 h-4"/></button></div>
       </div>
 
