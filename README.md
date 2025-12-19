@@ -42,9 +42,9 @@ Aether VPN Manager is a robust desktop application designed to provide a user-fr
 ## 🖥️ Screenshots
 
 
-![Screenshot 1](https://i.imgur.com/LPs261J.png)
+![Screenshot 1](https://i.imgur.com/7xFZNFK.png)
 
-![Screenshot 2](https://i.imgur.com/99iiuZN.png)
+![Screenshot 2](https://i.imgur.com/M34rTYJ.png)
 
 ## 🛠️ Tech Stack
 
