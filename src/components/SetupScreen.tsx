@@ -26,8 +26,8 @@ export const SetupScreen = ({ onPathSubmit }: { onPathSubmit: (path: string) => 
                     transition={{ delay: 0.2, duration: 0.5 }}
                     className="flex justify-center mb-6"
                 >
-                    <div className="w-16 h-16 bg-purple-500/10 border border-purple-500/30 rounded-full flex items-center justify-center shadow-[0_0_30px_rgba(168,85,247,0.2)]">
-                        <Terminal className="w-8 h-8 text-purple-400"/>
+                    <div className="">
+
                     </div>
                 </motion.div>
 
