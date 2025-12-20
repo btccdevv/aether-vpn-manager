@@ -251,7 +251,7 @@ This project is licensed under the [MIT License](LICENSE) - see the [LICENSE](LI
 
 **⭐ Star this repo if you find it helpful!**
 
-Made with ❤️ by [edidevv](https://github.com/edidevv)
+Made with ❤️ by [btcdev](https://github.com/btccdevv)
 
 </div>
 
