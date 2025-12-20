@@ -5,14 +5,11 @@ import fs from 'node:fs'
 import { createRequire } from 'node:module'
 import { fileURLToPath } from 'node:url'
 
-// --- GPU ACTIVAT + FIX-URI PENTRU LINUX ---
-// Nu dezactivam accelerarea hardware! O lasam pornita pentru animatii.
-// Folosim aceste flag-uri pentru a preveni ecranul negru/alb.
+// --- GPU ACTIVATED (HIGH PERFORMANCE) ---
 app.commandLine.appendSwitch('ignore-gpu-blocklist');
 app.commandLine.appendSwitch('enable-gpu-rasterization');
 app.commandLine.appendSwitch('enable-zero-copy');
-app.commandLine.appendSwitch('disable-gpu-sandbox'); // CRITIC PENTRU LINUX + ELECTRON
-// app.disableHardwareAcceleration(); // <--- SCOASA PENTRU PERFORMANTA
+// app.disableHardwareAcceleration(); // <--- SCOS PENTRU GPU REAL
 
 const require = createRequire(import.meta.url)
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
@@ -27,6 +24,24 @@ let trafficInterval: NodeJS.Timeout | null = null
 let currentConnectionName: string | null = null
 let lastRx = 0
 let lastTx = 0
+
+// Config File Path
+const userDataPath = app.getPath('userData');
+const configFilePath = path.join(userDataPath, 'user-config.json');
+
+// Helper pentru Configurare
+const getUserConfig = () => {
+    try {
+        if (fs.existsSync(configFilePath)) {
+            return JSON.parse(fs.readFileSync(configFilePath, 'utf-8'));
+        }
+    } catch {}
+    return { vpnPath: '' };
+};
+
+const saveUserConfig = (config: any) => {
+    fs.writeFileSync(configFilePath, JSON.stringify(config, null, 2));
+};
 
 function createWindow() {
   win = new BrowserWindow({
@@ -43,7 +58,7 @@ function createWindow() {
       nodeIntegration: false,
       contextIsolation: true,
       webSecurity: false,
-      backgroundThrottling: false // Animatiile merg si in background
+      backgroundThrottling: false
     },
   })
 
@@ -130,10 +145,25 @@ const stopTrafficMonitor = () => {
     win?.webContents.send('stats:update', { down: 0, up: 0 });
 }
 
+// --- IPC HANDLERS ---
+
+// CONFIG PATH MANAGEMENT
+ipcMain.handle('config:get-path', () => {
+    const cfg = getUserConfig();
+    return cfg.vpnPath || '';
+});
+
+ipcMain.handle('config:set-path', (_, newPath) => {
+    const cfg = getUserConfig();
+    cfg.vpnPath = newPath;
+    saveUserConfig(cfg);
+    return true;
+});
+
 ipcMain.handle('vpn:mullvad-check', async () => {
     try {
         const controller = new AbortController();
-        const id = setTimeout(() => controller.abort(), 3000);
+        const id = setTimeout(() => controller.abort(), 2000);
         const req = await fetch('https://am.i.mullvad.net/json', { signal: controller.signal });
         clearTimeout(id);
         const data = await req.json();
@@ -158,32 +188,6 @@ ipcMain.handle('vpn:scan-dir', async (_, dirPath) => {
             return { id: f, name: f.replace(/\.(conf|ovpn)$/, ''), path: path.join(dirPath, f), type: f.includes('conf') ? 'wireguard' : 'openvpn', endpoint: m ? m[3] : '1.1.1.1' };
         });
     } catch { return []; }
-});
-
-ipcMain.handle('sys:get-processes', async () => {
-    try {
-        const ssOut = await execute('ss -tuap state established');
-        const lines = ssOut.split('\n');
-        const processes = [];
-        for (let i = 1; i < lines.length; i++) {
-            const line = lines[i].trim();
-            if (!line) continue;
-            const parts = line.split(/\s+/);
-            if (parts.length < 6) continue;
-            const procRaw = parts.slice(6).join(' ');
-            const procMatch = procRaw.match(/"([^"]+)",pid=([0-9]+)/);
-            if (procMatch) {
-                const localIP = parts[4];
-                let status = 'safe';
-                if (!localIP.startsWith('10.') && !localIP.startsWith('192.168.') && !localIP.startsWith('127.')) {
-                    // Daca nu e IP privat, e suspect daca VPN e oprit
-                    status = currentConnectionName ? 'safe' : 'danger';
-                }
-                processes.push({ id: procMatch[2], name: procMatch[1], pid: procMatch[2], protocol: parts[0].toUpperCase(), status, local: parts[4], remote: parts[5] });
-            }
-        }
-        return { processes: processes.slice(0, 50), vpnIp: '10.64.x.x' }; // Limita pt performanta
-    } catch { return { processes: [] }; }
 });
 
 ipcMain.handle('vpn:connect', async (_, config) => {
