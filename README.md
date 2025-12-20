@@ -16,8 +16,7 @@ Security and privacy depend on the user's VPN configuration and provider.
 
 [![GitHub issues](https://img.shields.io/github/issues/edidevv/aether-vpn-manager?style=for-the-badge)](https://github.com/edidevv/aether-vpn-manager/issues)
 
-[![GitHub license](https://img.shields.io/github/license/edidevv/aether-vpn-manager?style=for-the-badge)](LICENSE)
-
+[![GitHub license](https://img.shields.io/github/license/edidevv/aether-vpn-manager?style=for-the-badge&label=license&color=blue)](LICENSE)
 
 </div>
 
