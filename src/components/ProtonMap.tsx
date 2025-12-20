@@ -3,10 +3,8 @@ import { MapContainer, TileLayer, Marker, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import { cityCoords } from '../utils/geoData';
 
-// Custom Marker Icon - MULT MAI MIC SI DISCRET
 const createGroupIcon = (count: number, isSelected: boolean) => {
     const color = isSelected ? '#10b981' : '#8b5cf6';
-    // Dimensiune redusa: 14px (era 24px)
     const size = 14;
 
     return L.divIcon({
@@ -26,7 +24,7 @@ const createGroupIcon = (count: number, isSelected: boolean) => {
             border: 1.5px solid white;
         ">${count > 9 ? '+' : count}</div>`, // Daca sunt >9 servere punem +, altfel numarul
         iconSize: [size, size],
-        iconAnchor: [size/2, size/2] // Centram perfect
+        iconAnchor: [size/2, size/2]
     });
 };
 
@@ -38,7 +36,6 @@ const MapUpdater = ({ center }: { center: [number, number] | null }) => {
 
 export const ProtonMap = ({ servers, selectedServerId, onCitySelect }: any) => {
 
-    // Grupam serverele pe orase
     const cityGroups = useMemo(() => {
         const groups: Record<string, any[]> = {};
 
@@ -72,7 +69,7 @@ export const ProtonMap = ({ servers, selectedServerId, onCitySelect }: any) => {
                 zoomControl={false}
                 attributionControl={false}
             >
-                {/* Harta Dark Matter */}
+                {}
                 <TileLayer url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png" />
 
                 <MapUpdater center={activeGroup ? activeGroup.coords : null} />

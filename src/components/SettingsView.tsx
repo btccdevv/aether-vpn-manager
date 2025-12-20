@@ -21,7 +21,6 @@ export const SettingsView = ({ settings, setSettings, vpnPath, setVpnPath, appVe
     const [pathInput, setPathInput] = useState(vpnPath);
 
     const savePath = async () => {
-        // @ts-ignore
         await window.ipcRenderer.invoke('config:set-path', pathInput);
         setVpnPath(pathInput);
         alert('Path saved! Reloading...');
@@ -37,7 +36,7 @@ export const SettingsView = ({ settings, setSettings, vpnPath, setVpnPath, appVe
             <h2 className="text-2xl font-bold text-white flex items-center gap-3 mb-6"><Settings className="w-6 h-6 text-purple-400"/> Settings</h2>
 
             <div className="space-y-4">
-                {/* PATH CONFIG */}
+                {}
                 <div className="p-4 bg-white/5 border border-white/10 rounded-xl">
                     <div className="flex items-center gap-2 mb-2 text-gray-300 font-bold text-sm"><FolderOpen className="w-4 h-4"/> VPN Configs Path</div>
                     <div className="flex gap-2">
@@ -50,7 +49,7 @@ export const SettingsView = ({ settings, setSettings, vpnPath, setVpnPath, appVe
                     </div>
                 </div>
 
-                {/* THEME SELECTOR */}
+                {}
                 <div className="p-4 bg-white/5 border border-white/10 rounded-xl">
                     <div className="flex items-center gap-2 mb-3 text-gray-300 font-bold text-sm"><Palette className="w-4 h-4"/> Seasonal Theme</div>
                     <div className="grid grid-cols-4 gap-2">

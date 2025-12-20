@@ -4,7 +4,7 @@ import { FolderSearch, Terminal, ChevronRight } from 'lucide-react';
 import ParticleBackground from './ParticleBackground';
 
 export const SetupScreen = ({ onPathSubmit }: { onPathSubmit: (path: string) => void }) => {
-    const [pathInput, setPathInput] = useState('/home/xvxvxv/codes/vpn'); // Default path
+    const [pathInput, setPathInput] = useState('/home/xvxvxv/codes/vpn');
 
     const handleSubmit = () => {
         onPathSubmit(pathInput);

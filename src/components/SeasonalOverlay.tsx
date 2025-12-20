@@ -3,7 +3,6 @@ import { motion } from 'framer-motion';
 
 type Theme = 'christmas' | 'halloween' | 'easter' | 'none';
 
-// ASSETS
 const Pumpkin = ({ x, scale, delay }: { x: string, scale: number, delay: number }) => (
     <motion.div
         className="absolute bottom-0 z-10"

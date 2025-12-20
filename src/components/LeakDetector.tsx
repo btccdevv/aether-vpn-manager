@@ -36,11 +36,9 @@ export const LeakDetector = () => {
         setFinished(false);
         setIpData(null);
 
-        // Simularea timpului de scanare
         await new Promise(r => setTimeout(r, 2000));
 
         try {
-            // @ts-ignore
             const result = await window.ipcRenderer.invoke('vpn:leak-check');
             setIpData(result);
         } catch (e) {

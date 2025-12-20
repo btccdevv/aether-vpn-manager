@@ -1,4 +1,3 @@
-// 1. TARI (Cod -> Nume)
 export const countryMap: Record<string, string> = {
     'al': 'Albania', 'at': 'Austria', 'be': 'Belgium', 'bg': 'Bulgaria', 'hr': 'Croatia',
     'cy': 'Cyprus', 'cz': 'Czechia', 'dk': 'Denmark', 'ee': 'Estonia', 'fi': 'Finland',
@@ -14,23 +13,20 @@ export const countryMap: Record<string, string> = {
     'vn': 'Vietnam', 'ae': 'UAE', 'il': 'Israel', 'za': 'South Africa'
 };
 
-// 2. COORDONATE (Cod -> [Lat, Long])
 export const cityCoords: Record<string, [number, number]> = {
-    // Europe East/Central
-    'buh': [44.4268, 26.1025], 'buc': [44.4268, 26.1025], // Bucharest
-    'beg': [44.7866, 20.4489], // Belgrade
-    'sof': [42.6977, 23.3219], // Sofia
-    'bud': [47.4979, 19.0402], // Budapest
-    'vie': [48.2082, 16.3738], // Vienna
-    'bts': [48.1486, 17.1077], // Bratislava
-    'prg': [50.0755, 14.4378], // Prague
-    'waw': [52.2297, 21.0122], // Warsaw
-    'kiv': [50.4501, 30.5234], // Kyiv
-    'kis': [47.0105, 28.8638], // Chisinau
-    'ath': [37.9838, 23.7275], // Athens
-    'ist': [41.0082, 28.9784], // Istanbul
+    'buh': [44.4268, 26.1025], 'buc': [44.4268, 26.1025],
+    'beg': [44.7866, 20.4489],
+    'sof': [42.6977, 23.3219],
+    'bud': [47.4979, 19.0402],
+    'vie': [48.2082, 16.3738],
+    'bts': [48.1486, 17.1077],
+    'prg': [50.0755, 14.4378],
+    'waw': [52.2297, 21.0122],
+    'kiv': [50.4501, 30.5234],
+    'kis': [47.0105, 28.8638],
+    'ath': [37.9838, 23.7275],
+    'ist': [41.0082, 28.9784],
 
-    // Western Europe
     'lon': [51.5072, -0.1276], 'man': [53.4808, -2.2426],
     'ams': [52.3676, 4.9041], 'bru': [50.8503, 4.3517],
     'par': [48.8566, 2.3522], 'mrs': [43.2965, 5.3698],
@@ -41,22 +37,19 @@ export const cityCoords: Record<string, [number, number]> = {
     'sto': [59.3293, 18.0686], 'osl': [59.9139, 10.7522], 'cph': [55.6761, 12.5683], 'hel': [60.1699, 24.9384],
     'dub': [53.3498, -6.2603],
 
-    // USA
     'nyc': [40.7128, -74.0060], 'nj': [40.0583, -74.4057],
     'lax': [34.0522, -118.2437], 'sfo': [37.7749, -122.4194], 'sea': [47.6062, -122.3321],
     'chi': [41.8781, -87.6298], 'dal': [32.7767, -96.7970], 'mia': [25.7617, -80.1918],
     'atl': [33.7490, -84.3880], 'den': [39.7392, -104.9903], 'phx': [33.4484, -112.0740],
-    'ash': [39.0438, -77.4875], // Ashburn
-    'slc': [40.7608, -111.8910], // Salt Lake City
+    'ash': [39.0438, -77.4875],
+    'slc': [40.7608, -111.8910],
 
-    // Canada & Others
     'tor': [43.6532, -79.3832], 'mtl': [45.5017, -73.5673], 'yvr': [49.2827, -123.1207],
     'tok': [35.6762, 139.6503], 'sg': [1.3521, 103.8198], 'hk': [22.3193, 114.1694],
     'syd': [-33.8688, 151.2093], 'dxb': [25.276987, 55.296249], 'jnb': [-26.2041, 28.0473],
     'sao': [-23.5505, -46.6333], 'mex': [19.4326, -99.1332]
 };
 
-// 3. NUME FRUMOASE (Cod -> Nume Complet) -- AICI E FIX-UL
 export const cityNameMap: Record<string, string> = {
     'buh': 'Bucharest', 'buc': 'Bucharest',
     'beg': 'Belgrade',
@@ -83,7 +76,6 @@ export const cityNameMap: Record<string, string> = {
     'syd': 'Sydney', 'dxb': 'Dubai', 'jnb': 'Johannesburg', 'sao': 'Sao Paulo', 'mex': 'Mexico City'
 };
 
-// LOGICA DE DETECTIE UPDATATA
 export const detectCity = (filename: string): { city: string, country: string, code: string } => {
     const parts = filename.toLowerCase().split(/[-_]/);
 
@@ -91,7 +83,6 @@ export const detectCity = (filename: string): { city: string, country: string, c
     let cityPretty = 'Unknown';
     let cityCode = '';
 
-    // 1. Gasim Tara
     for (const p of parts) {
         if (countryMap[p]) {
             countryName = countryMap[p];
@@ -99,12 +90,9 @@ export const detectCity = (filename: string): { city: string, country: string, c
         }
     }
 
-    // 2. Gasim Orasul si il traducem
     for (const p of parts) {
         if (cityCoords[p]) {
-            // Verificam daca e cod de oras valid
             cityCode = p;
-            // Traducem in nume complet daca exista in map, altfel Capitalize
             cityPretty = cityNameMap[p] || (p.charAt(0).toUpperCase() + p.slice(1));
             return { city: cityPretty, country: countryName, code: cityCode };
         }

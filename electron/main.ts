@@ -24,11 +24,9 @@ let currentConnectionName: string | null = null
 let lastRx = 0
 let lastTx = 0
 
-// Config File Path
 const userDataPath = app.getPath('userData');
 const configFilePath = path.join(userDataPath, 'user-config.json');
 
-// Helper pentru Configurare
 const getUserConfig = () => {
     try {
         if (fs.existsSync(configFilePath)) {
@@ -144,9 +142,7 @@ const stopTrafficMonitor = () => {
     win?.webContents.send('stats:update', { down: 0, up: 0 });
 }
 
-// --- IPC HANDLERS ---
 
-// CONFIG PATH MANAGEMENT
 ipcMain.handle('config:get-path', () => {
     const cfg = getUserConfig();
     return cfg.vpnPath || '';

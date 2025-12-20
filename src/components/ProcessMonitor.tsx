@@ -9,20 +9,17 @@ export const ProcessMonitor = ({ isVpnActive }: { isVpnActive: boolean }) => {
 
     useEffect(() => {
         const fetchProcs = async () => {
-            // @ts-ignore
             const data = await window.ipcRenderer.invoke('sys:get-processes');
             if (data) {
                 setProcesses(data.processes || []);
                 setIface(data.interface || 'Unknown');
             }
         };
-        // Scanare mai rara (3s) pentru a nu face lag
         const interval = setInterval(fetchProcs, 3000);
         fetchProcs();
         return () => clearInterval(interval);
     }, []);
 
-    // Afisam doar top 20 procese pentru performanta, sau toate daca sunt putine
     const displayProcs = processes.slice(0, 30);
 
     return (

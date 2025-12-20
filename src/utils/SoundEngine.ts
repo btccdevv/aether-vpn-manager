@@ -4,7 +4,6 @@ class SoundEngine {
 
   constructor() {
     try {
-      // @ts-ignore
       const AudioContext = window.AudioContext || window.webkitAudioContext;
       this.ctx = new AudioContext();
     } catch (e) {}
@@ -38,7 +37,6 @@ class SoundEngine {
       this.osc('sawtooth', 200, 0.4);
   }
 
-  // ALARMA PENTRU LEAK
   playAlarm() {
       if (!this.enabled || !this.ctx) return;
       const t = this.ctx.currentTime;
@@ -46,7 +44,7 @@ class SoundEngine {
       const g = this.ctx.createGain();
       o.type = 'sawtooth';
       o.frequency.setValueAtTime(800, t);
-      o.frequency.linearRampToValueAtTime(400, t + 0.3); // Sirena descrescatoare
+      o.frequency.linearRampToValueAtTime(400, t + 0.3);
 
       g.gain.setValueAtTime(0.1, t);
       g.gain.linearRampToValueAtTime(0, t + 0.3);

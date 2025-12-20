@@ -3,10 +3,8 @@ import { ComposableMap, Geographies, Geography, Marker } from 'react-simple-maps
 import { Tooltip } from 'react-tooltip';
 import { LoadRing } from './LoadRing';
 
-// GeoJSON simplificat pentru harta lumii
 const geoUrl = "https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json";
 
-// Coordonate Hardcoded pentru orasele tale
 const cityCoords: Record<string, [number, number]> = {
     'bucharest': [26.1025, 44.4268],
     'budapest': [19.0402, 47.4979],
@@ -30,7 +28,6 @@ const cityCoords: Record<string, [number, number]> = {
 
 export const ServerMap = ({ servers, onSelect, selectedId }: any) => {
 
-    // Grupam serverele dupa oras
     const mapMarkers = useMemo(() => {
         const markers: any[] = [];
         servers.forEach((s: any) => {
@@ -39,7 +36,7 @@ export const ServerMap = ({ servers, onSelect, selectedId }: any) => {
                 markers.push({
                     name: s.prettyCity,
                     coordinates: cityCoords[cityKey],
-                    server: s // Legatura catre obiectul server
+                    server: s
                 });
             }
         });
@@ -50,7 +47,7 @@ export const ServerMap = ({ servers, onSelect, selectedId }: any) => {
         <div className="w-full h-full relative overflow-hidden rounded-xl bg-[#09090b]">
             <ComposableMap
                 projection="geoMercator"
-                projectionConfig={{ scale: 100, center: [15, 50] }} // Focus Europa
+                projectionConfig={{ scale: 100, center: [15, 50] }}
                 style={{ width: "100%", height: "100%" }}
             >
                 <Geographies geography={geoUrl}>
@@ -79,15 +76,15 @@ export const ServerMap = ({ servers, onSelect, selectedId }: any) => {
                             data-tooltip-id="my-tooltip"
                             data-tooltip-content={`${server.name} | Load: ${server.load}%`}
                         >
-                            {/* Pulse Effect pentru serverul selectat */}
+                            {}
                             {selectedId === server.id && (
                                 <circle r={12} fill="rgba(16, 185, 129, 0.3)" className="animate-ping" />
                             )}
 
-                            {/* Marker Core */}
+                            {}
                             <circle r={4} fill={selectedId === server.id ? "#10b981" : "#8b5cf6"} stroke="#fff" strokeWidth={1} />
 
-                            {/* Hover Load Ring (Custom Mini) */}
+                            {}
                             <g className="opacity-0 group-hover:opacity-100 transition-opacity" transform="translate(-10, -30)">
                                 <rect width="20" height="20" fill="#000" rx="4" opacity="0.8" />
                                 <text x="10" y="14" fontSize="8" fill="white" textAnchor="middle">{server.load}</text>
@@ -97,7 +94,7 @@ export const ServerMap = ({ servers, onSelect, selectedId }: any) => {
                 ))}
             </ComposableMap>
 
-            {/* Legenda */}
+            {}
             <div className="absolute bottom-4 left-4 bg-black/50 p-2 rounded text-xs text-gray-400 pointer-events-none">
                 <div className="flex items-center gap-2"><div className="w-2 h-2 rounded-full bg-emerald-500"></div> Selected</div>
                 <div className="flex items-center gap-2"><div className="w-2 h-2 rounded-full bg-purple-500"></div> Available</div>

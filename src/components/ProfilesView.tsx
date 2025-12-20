@@ -3,7 +3,6 @@ import { motion } from 'framer-motion';
 import { Home, Plane, Wifi, Shield, Zap, CheckCircle2 } from 'lucide-react';
 import { clsx } from 'clsx';
 
-// MAPARE CULORI STATICE (Tailwind nu suporta dynamic strings)
 const colorMap: any = {
     emerald: {
         bgActive: 'bg-emerald-500/10',
@@ -43,7 +42,7 @@ const ProfileCard = ({ id, title, icon, desc, color, active, settings, onSelect,
                     : "bg-white/5 border-white/10 hover:border-white/20"
             )}
         >
-            {/* Active Indicator */}
+            {}
             {active && (
                 <div className={clsx("absolute top-4 right-4 text-xs font-bold px-2 py-1 rounded-full flex items-center gap-1 bg-black/40", theme.text)}>
                     <CheckCircle2 className="w-3 h-3" /> ACTIVE
@@ -60,7 +59,7 @@ const ProfileCard = ({ id, title, icon, desc, color, active, settings, onSelect,
                 </div>
             </div>
 
-            {/* Profile Settings (Mini Toggles) */}
+            {}
             <div className="space-y-3">
                 <div className="flex items-center justify-between" onClick={(e) => { e.stopPropagation(); onToggleSetting(id, 'autoConnect'); }}>
                     <div className="flex items-center gap-2 text-xs text-gray-400">
@@ -81,7 +80,7 @@ const ProfileCard = ({ id, title, icon, desc, color, active, settings, onSelect,
                 </div>
             </div>
 
-            {/* Background Glow */}
+            {}
             {active && <div className={clsx("absolute -bottom-10 -right-10 w-32 h-32 rounded-full blur-[60px] opacity-20", theme.glow)} />}
         </motion.div>
     );

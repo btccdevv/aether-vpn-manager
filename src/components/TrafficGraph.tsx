@@ -8,7 +8,6 @@ interface DataPoint {
 }
 
 const TrafficGraph = ({ downloadSpeed, uploadSpeed }: { downloadSpeed: number, uploadSpeed: number }) => {
-  // Buffer de date
   const [data, setData] = useState<DataPoint[]>(Array(30).fill({ download: 0, upload: 0 }));
 
   useEffect(() => {
@@ -18,11 +17,10 @@ const TrafficGraph = ({ downloadSpeed, uploadSpeed }: { downloadSpeed: number, u
             download: downloadSpeed,
             upload: uploadSpeed
         };
-        // Mentinem ultimele 30 puncte
         const newData = [...prev.slice(1), newPoint];
         return newData;
       });
-    }, 500); // Update la 0.5s pentru fluiditate vizuala
+    }, 500);
 
     return () => clearInterval(interval);
   }, [downloadSpeed, uploadSpeed]);
@@ -30,7 +28,7 @@ const TrafficGraph = ({ downloadSpeed, uploadSpeed }: { downloadSpeed: number, u
   return (
     <div className="w-full h-48 mt-6 relative bg-black/20 rounded-xl border border-white/5 backdrop-blur-sm overflow-hidden shadow-inner flex flex-col">
 
-      {/* Header Simplu: Doar Viteza Curenta */}
+      {}
       <div className="flex justify-between items-center px-4 py-2  bg-white/1">
           <div className="flex gap-6 text-[13px] font-bold font-mono uppercase tracking-widest w-full justify-center">
               <div className="flex items-center gap-2 text-emerald-400">
@@ -60,7 +58,7 @@ const TrafficGraph = ({ downloadSpeed, uploadSpeed }: { downloadSpeed: number, u
 
               <CartesianGrid strokeDasharray="3 3" stroke="rgba(255, 255, 255, 0.03)" vertical={false} />
 
-              {/* Domain 'auto' este CHEIA: Graficul se intinde cat e valoarea maxima */}
+              {}
               <YAxis domain={[0, 'auto']} hide />
 
               <Tooltip

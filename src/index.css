@@ -10,13 +10,13 @@ body {
   color: white;
 }
 
-/* Custom Scrollbar */
+
 .custom-scrollbar::-webkit-scrollbar { width: 4px; }
 .custom-scrollbar::-webkit-scrollbar-track { background: #18181b; }
 .custom-scrollbar::-webkit-scrollbar-thumb { background: #3f3f46; border-radius: 10px; }
 .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #10b981; }
 
-/* Leaflet Dark Mode Overrides */
+
 .leaflet-container {
     background: #09090b !important;
     font-family: inherit;

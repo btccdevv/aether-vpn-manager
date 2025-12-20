@@ -22,7 +22,7 @@ export const ServerDrawer = ({ isOpen, onClose, cityName, countryName, servers, 
             transition={{ type: "spring", damping: 25, stiffness: 200 }}
             className="absolute top-0 right-0 h-full w-80 bg-[#121214]/95 backdrop-blur-xl border-l border-white/10 shadow-2xl z-30 flex flex-col"
         >
-            {/* Header */}
+            {}
             <div className="p-6 border-b border-white/5 flex justify-between items-start bg-gradient-to-b from-white/5 to-transparent">
                 <div>
                     <h2 className="text-2xl font-bold text-white leading-none">{cityName}</h2>
@@ -38,7 +38,7 @@ export const ServerDrawer = ({ isOpen, onClose, cityName, countryName, servers, 
                 </button>
             </div>
 
-            {/* List */}
+            {}
             <div className="flex-1 overflow-y-auto p-4 space-y-2 custom-scrollbar">
                 {servers.map((server) => (
                     <div

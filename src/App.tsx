@@ -15,10 +15,9 @@ import { ProtonMap } from './components/ProtonMap';
 import { ServerDrawer } from './components/ServerDrawer';
 import { SettingsView } from './components/SettingsView';
 import { SeasonalOverlay } from './components/SeasonalOverlay';
-import { SetupScreen } from './components/SetupScreen'; // NOU
+import { SetupScreen } from './components/SetupScreen';
 import { detectCity } from './utils/geoData';
 
-// --- CONFIGURARE TEMA (Schimba aici) ---
 const CURRENT_THEME: 'christmas' | 'halloween' | 'easter' | 'none' = 'none';
 
 function App() {
@@ -41,45 +40,38 @@ function App() {
       return s ? JSON.parse(s) : { autoConnect: false, killSwitch: true, sound: true, theme: CURRENT_THEME };
   });
 
-  // Load Path & Init
   useEffect(() => {
       const init = async () => {
-          // @ts-ignore
           const path = await window.ipcRenderer.invoke('config:get-path');
-          setVpnPath(path || ''); // Folosim string gol daca e null
+          setVpnPath(path || '');
           setLoading(false);
       };
       init();
   }, []);
 
   useEffect(() => {
-      // Setam tema din setari, care e persistenta
       localStorage.setItem('vpn_settings', JSON.stringify(settings));
       sfx.setEnabled(settings.sound);
   }, [settings]);
 
   useEffect(() => {
-    if (!vpnPath) return; // Asteptam ca path-ul sa fie setat
+    if (!vpnPath) return;
 
-    // @ts-ignore
     window.ipcRenderer.on('stats:update', (_: any, data: any) => { setDownSpeed(data.down/1024); setUpSpeed(data.up/1024); });
-    // @ts-ignore
     window.ipcRenderer.on('vpn:status', (_: any, st: any) => {
         if (st.connected) setConnected(true); else { setConnected(false); setRealInfo(null); }
     });
     scanFiles();
     const hb = setInterval(async () => {
-        // @ts-ignore
         const s = await window.ipcRenderer.invoke('vpn:mullvad-check');
         if (s.connected) { if (!connected) { setConnected(true); setConnecting(false); } setRealInfo(s); }
         else { if (connected && !connecting) {} }
-    }, 5000); // Check mai rar sa nu facem lag
+    }, 5000);
     return () => clearInterval(hb);
   }, [connected, vpnPath]);
 
   const scanFiles = async () => {
     if (!vpnPath) return;
-    // @ts-ignore
     const res = await window.ipcRenderer.invoke('vpn:scan-dir', vpnPath);
     const enriched = res.map((s:any) => { const geo = detectCity(s.name); return { ...s, prettyCountry: geo.country, prettyCity: geo.city, cityCode: geo.code, load: Math.floor(Math.random()*80)+10 }; });
     setServers(enriched);
@@ -98,17 +90,16 @@ function App() {
     }
     sfx.playClick();
     if (connected) {
-        setConnecting(true); // @ts-ignore
+        setConnecting(true);
         await window.ipcRenderer.invoke('vpn:disconnect'); setConnecting(false); sfx.playDisconnect();
     } else {
-        setConnecting(true); sfx.playConnect(); // @ts-ignore
+        setConnecting(true); sfx.playConnect();
         const res = await window.ipcRenderer.invoke('vpn:connect', selectedServer);
         if (!res.success) setConnecting(false);
     }
   }, [connected, selectedServer]);
 
   const saveSetupPath = async (path: string) => {
-      // @ts-ignore
       await window.ipcRenderer.invoke('config:set-path', path);
       setVpnPath(path);
       scanFiles();
@@ -116,11 +107,10 @@ function App() {
 
   const MemoMap = useMemo(() => (<ProtonMap servers={servers} selectedServerId={selectedServer?.id} onCitySelect={setActiveCityGroup} />), [servers, selectedServer]);
 
-  // STYLES & STATES
   const glowStyle = connected ? "bg-emerald-500/10 border-emerald-500 shadow-[0_0_50px_rgba(16,185,129,0.4)]" : connecting ? "bg-yellow-500/10 border-yellow-500 shadow-[0_0_50px_rgba(234,179,8,0.4)] animate-pulse" : "bg-[#18181b]/80 border-white/10 hover:border-purple-500/50 hover:shadow-[0_0_30px_rgba(139,92,246,0.2)]";
   const textColor = connected ? "text-emerald-400" : connecting ? "text-yellow-400" : "text-gray-400";
 
-  if (loading) return <div className="h-screen w-screen bg-[#09090b]"></div>; // Blank screen while loading path
+  if (loading) return <div className="h-screen w-screen bg-[#09090b]"></div>;
 
   if (!vpnPath) return <SetupScreen onPathSubmit={saveSetupPath} />;
 
